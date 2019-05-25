@@ -2,8 +2,15 @@
 import gspread
 #Service client credential from oauth2client
 from oauth2client.service_account import ServiceAccountCredentials
-# Print nicely
-import pprint
+
+# shit code to add parent directory as a package
+import os, inspect, sys
+current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
+
+# import ski field model
+from models.field import Field
 
 import random as rand
 
@@ -14,12 +21,20 @@ def row_selector (row_num, start_col, end_col):
     return start_col.upper() + row_num + ":" + end_col.upper() + row_num
 
 
+field = Field('coronet')
+
+# mock values
+field.rain = rand.sample(range(20), 8)
+field.snow = rand.sample(range(20, 40), 8)
+
 sheet_name = 'snow'
 current_field = 'coronet'
 
-# our row ranges
-rain = row_selector(1, 'B', 'i')
-snow = row_selector(2, 'B', 'i')
+selectors = {
+    'rain' : row_selector(1, 'B', 'I'),
+    'snow' : row_selector(2, 'B', 'I'),
+}
+
 
 # use creds to create a client to interact with the Google Drive API
 scope = ['https://spreadsheets.google.com/feeds',
@@ -29,19 +44,32 @@ client = gspread.authorize(creds)
 
 # Find a workbook by name and open the first sheet
 # Make sure you use the right name here.
-sheet = client.open(sheet_name).worksheet(current_field)
+sheet = client.open(sheet_name).worksheet(field.name)
 
-# this grabs a row of cell objects for the defined range
-row = sheet.range(snow)
 
-# loop over cells updating their values
-for idx, cell in enumerate(row):
-    if idx % 2 == 0:
-        cell.value = rand.randint(0,20)
-    else:
-        cell.value = rand.randint(20, 40)
 
-sheet.update_cells(row)
 
-for cell in row:
-    print(cell.value)
+def update_row(weather_type, selector):
+    if weather_type == 'snow':
+        weather_vals = field.snow
+    elif weather_type == 'rain':
+        weather_vals = field.rain
+    
+    row = sheet.range(selector)
+
+    # loop over cells updating their values
+    for idx, cell in enumerate(row):
+        cell.value = weather_vals[idx]
+    
+    sheet.update_cells(row)
+
+
+def main():
+    # for key, val in our row selectors
+    for weather_type, row_selector in selectors.items():
+        # loop over each row, batch updating
+        update_row(weather_type, row_selector)
+
+if __name__ == "__main__":
+    main()
+
