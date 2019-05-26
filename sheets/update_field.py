@@ -3,23 +3,12 @@ import gspread
 #Service client credential from oauth2client
 from oauth2client.service_account import ServiceAccountCredentials
 
-# shit code to add parent directory as a package
-import os, inspect, sys
-current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parent_dir = os.path.dirname(current_dir)
-sys.path.insert(0, parent_dir)
-
-import random as rand
 
 # builds and returns our cell range as a string
 def row_selector (row_num, start_col, end_col):
     # in case somebody passes a number
     row_num = str(row_num)
     return start_col.upper() + row_num + ":" + end_col.upper() + row_num
-
-
-# field model object
-field = None
 
 # name of our Google Sheet file
 sheet_name = 'snow'
@@ -33,8 +22,10 @@ selectors = {
     'chill' : row_selector(5, 'B', 'V'),
 }
 
+
 # make db connection and return reference
 def connect():
+    print('Connecting to Sheets API...')
     # use creds to create a client to interact with the Google Drive API
     scope = ['https://spreadsheets.google.com/feeds',
             'https://www.googleapis.com/auth/drive']
@@ -48,9 +39,7 @@ def connect():
 # takes a weather type string and a row selector string
 # and updates a google sheets file one row per loop 
 def update_row(weather_type, selector):
-    # get our sheet reference
-    sheet = connect()
-
+    # consider this a 'switch/case' statement
     fields_to_update = {
         'snow' : field.snow,
         'rain' : field.rain,
@@ -67,18 +56,28 @@ def update_row(weather_type, selector):
     for idx, cell in enumerate(row):
         cell.value = weather_vals[idx]
     
+    print(f'Updating row with {weather_type} data...')
     # push the update
     sheet.update_cells(row)
+    print(f'{weather_type} data updated')
 
 
 # this method gets called from our scraper
 def update(scraped_field):
-    global field 
+    global field, sheet
     field = scraped_field
+
+    print(f'Updating data for {field.name}')
+
+    # get our sheet reference
+    sheet = connect()
+    print('Connection accepted')
 
     # for key, val in our row selectors
     for weather_type, row_selector in selectors.items():
         # loop over each row, batch updating
         # e.g. update_row('snow', 'B2:F2')
         update_row(weather_type, row_selector)
+
+    print(f'{field.name} updated')
 

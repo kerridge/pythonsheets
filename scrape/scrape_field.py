@@ -15,6 +15,7 @@ def clean_data(weather_list):
 # request the page and parse the html
 def do_scrape(field):
     # request the html, grab all table rows from it
+    print(f'Scraping data from ({field.url})')
     page = requests.get(field.url)
     soup = BeautifulSoup(page.content, 'html.parser')
     table_rows = soup.find_all('tr')

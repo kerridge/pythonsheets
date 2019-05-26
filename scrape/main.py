@@ -10,12 +10,18 @@ from models.field import Field
 
 coronet = Field('Coronet Peak', 'https://www.snow-forecast.com/resorts/Coronet-Peak/6day/mid')
 
+fields = [
+    Field('Coronet Peak', 'https://www.snow-forecast.com/resorts/Coronet-Peak/6day/mid'),
+]
 
 def main():
-    scraper.do_scrape(coronet)
-    db.update(coronet)
+    # scrape all the fields data
+    [scraper.do_scrape(field) for field in fields]
+    
+    # update the db
+    [db.update(field) for field in fields]
 
 if __name__ == "__main__":
     main()
 
-print('done')
+print('Done')
