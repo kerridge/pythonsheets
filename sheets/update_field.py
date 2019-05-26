@@ -47,8 +47,8 @@ client = gspread.authorize(creds)
 sheet = client.open(sheet_name).worksheet(field.name)
 
 
-
-
+# takes a weather type string and a row selector string
+# and updates a google sheets file one row per loop 
 def update_row(weather_type, selector):
     if weather_type == 'snow':
         weather_vals = field.snow
@@ -68,6 +68,7 @@ def main():
     # for key, val in our row selectors
     for weather_type, row_selector in selectors.items():
         # loop over each row, batch updating
+        # e.g. update_row('snow', 'B2:F2')
         update_row(weather_type, row_selector)
 
 if __name__ == "__main__":
