@@ -9,9 +9,6 @@ current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfra
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
-# import ski field model
-from models.field import Field
-
 import random as rand
 
 # builds and returns our cell range as a string
@@ -21,39 +18,48 @@ def row_selector (row_num, start_col, end_col):
     return start_col.upper() + row_num + ":" + end_col.upper() + row_num
 
 
-field = Field('Coronet Peak', 'https://www.snow-forecast.com/resorts/Coronet-Peak/6day/mid')
+# field model object
+field = None
 
-# mock values
-field.rain = rand.sample(range(30), 21)
-field.snow = rand.sample(range(20, 60), 21)
-
+# name of our Google Sheet file
 sheet_name = 'snow'
-current_field = 'coronet'
 
+# the range of cells to grab
 selectors = {
     'rain' : row_selector(1, 'B', 'V'),
     'snow' : row_selector(2, 'B', 'V'),
+    'max' : row_selector(3, 'B', 'V'),
+    'min' : row_selector(4, 'B', 'V'),
+    'chill' : row_selector(5, 'B', 'V'),
 }
 
+# make db connection and return reference
+def connect():
+    # use creds to create a client to interact with the Google Drive API
+    scope = ['https://spreadsheets.google.com/feeds',
+            'https://www.googleapis.com/auth/drive']
+    creds = ServiceAccountCredentials.from_json_keyfile_name('credentials/drive_creds.json', scope)
+    client = gspread.authorize(creds)
 
-# use creds to create a client to interact with the Google Drive API
-scope = ['https://spreadsheets.google.com/feeds',
-         'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('credentials/drive_creds.json', scope)
-client = gspread.authorize(creds)
-
-# Find a workbook by name and open the first sheet
-# Make sure you use the right name here.
-sheet = client.open(sheet_name).worksheet(field.name)
+    # Find a workbook by name and return the sheet reference
+    return client.open(sheet_name).worksheet(field.name)
 
 
 # takes a weather type string and a row selector string
 # and updates a google sheets file one row per loop 
 def update_row(weather_type, selector):
-    if weather_type == 'snow':
-        weather_vals = field.snow
-    elif weather_type == 'rain':
-        weather_vals = field.rain
+    # get our sheet reference
+    sheet = connect()
+
+    fields_to_update = {
+        'snow' : field.snow,
+        'rain' : field.rain,
+        'max' : field.max_temp,
+        'min' : field.min_temp,
+        'chill' : field.wind_chill
+    }
+
+    weather_vals = fields_to_update.get(weather_type)
     
     row = sheet.range(selector)
 
@@ -61,16 +67,18 @@ def update_row(weather_type, selector):
     for idx, cell in enumerate(row):
         cell.value = weather_vals[idx]
     
+    # push the update
     sheet.update_cells(row)
 
 
-def main():
+# this method gets called from our scraper
+def update(scraped_field):
+    global field 
+    field = scraped_field
+
     # for key, val in our row selectors
     for weather_type, row_selector in selectors.items():
         # loop over each row, batch updating
         # e.g. update_row('snow', 'B2:F2')
         update_row(weather_type, row_selector)
-
-if __name__ == "__main__":
-    main()
 

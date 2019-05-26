@@ -3,8 +3,12 @@ class Field:
         self.name = name
         self.url = url
 
+    # field name
     name = ''
+    # url to scrape from
     url = ''
+
+    # weather value lists
     rain = []
     snow = []
     max_temp = []
