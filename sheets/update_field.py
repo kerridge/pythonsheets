@@ -21,18 +21,18 @@ def row_selector (row_num, start_col, end_col):
     return start_col.upper() + row_num + ":" + end_col.upper() + row_num
 
 
-field = Field('coronet')
+field = Field('Coronet Peak', 'https://www.snow-forecast.com/resorts/Coronet-Peak/6day/mid')
 
 # mock values
-field.rain = rand.sample(range(20), 8)
-field.snow = rand.sample(range(20, 40), 8)
+field.rain = rand.sample(range(30), 21)
+field.snow = rand.sample(range(20, 60), 21)
 
 sheet_name = 'snow'
 current_field = 'coronet'
 
 selectors = {
-    'rain' : row_selector(1, 'B', 'I'),
-    'snow' : row_selector(2, 'B', 'I'),
+    'rain' : row_selector(1, 'B', 'V'),
+    'snow' : row_selector(2, 'B', 'V'),
 }
 
 
