@@ -23,7 +23,7 @@ selectors = {
 }
 
 
-# make db connection and return reference
+# make db connection and return reference to worksheet
 def connect():
     print('Connecting to Sheets API...')
     # use creds to create a client to interact with the Google Drive API
