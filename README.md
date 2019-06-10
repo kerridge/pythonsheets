@@ -1,23 +1,24 @@
 # pythonsheets
 A script to scrape data and upload to Google Sheets using their API
 
-- create virtual environment
+1. create virtual environment
 
-Unix
+- Unix
 
 `python3 -m venv env`
 
-Windows
+- Windows
 
 `py -3 -m venv env`
 
 ---
-- activate virtual environment
+
+2. activate virtual environment
 
 `source env/bin/activate`
 
-- install dependencies
+3. install dependencies
 
 `pip install -r requirements.txt`
 
-- run main.py
+4. run main.py
