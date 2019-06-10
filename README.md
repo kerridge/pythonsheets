@@ -5,11 +5,11 @@ A script to scrape data and upload to Google Sheets using their API
 
 Unix
 
-`python3 -r venv env`
+`python3 -m venv env`
 
 Windows
 
-`py -3 -r venv env`
+`py -3 -m venv env`
 
 ---
 - activate virtual environment
@@ -18,6 +18,6 @@ Windows
 
 - install dependencies
 
-`pip install -m requirements.txt`
+`pip install -r requirements.txt`
 
 - run main.py
