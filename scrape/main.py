@@ -10,13 +10,13 @@ from models.field import Field
 
 
 fields = [
-    # Field('Coronet Peak', 'https://www.snow-forecast.com/resorts/Coronet-Peak/6day/mid'),
-    # Field('Cardrona', 'https://www.snow-forecast.com/resorts/Cardrona/6day/mid'),
-    # Field('Treble Cone', 'https://www.snow-forecast.com/resorts/Treble-Cone/6day/mid'),
-    # Field('Remarkables', 'https://www.snow-forecast.com/resorts/Remarkables/6day/mid'),
+    Field('Coronet Peak', 'https://www.snow-forecast.com/resorts/Coronet-Peak/6day/mid'),
+    Field('Cardrona', 'https://www.snow-forecast.com/resorts/Cardrona/6day/mid'),
+    Field('Treble Cone', 'https://www.snow-forecast.com/resorts/Treble-Cone/6day/mid'),
+    Field('Remarkables', 'https://www.snow-forecast.com/resorts/Remarkables/6day/mid'),
     Field('Round Hill', 'https://www.snow-forecast.com/resorts/Round-Hill/6day/mid'),
     Field('Mount Hutt', 'https://www.snow-forecast.com/resorts/Mount-Hutt/6day/mid'),
-    Field('Whara Kea Chalet', 'https://www.snow-forecast.com/resorts/Whara-Kea-Chalet/6day/mid'),
+    # Field('Whara Kea Chalet', 'https://www.snow-forecast.com/resorts/Whara-Kea-Chalet/6day/mid'),
 ]
 
 def main():

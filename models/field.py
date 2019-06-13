@@ -9,8 +9,8 @@ class Field:
     url = ''
 
     # weather value lists
-    rain = []
-    snow = []
-    max_temp = []
-    min_temp = []
-    wind_chill = []
+    rain = list()
+    snow = list()
+    max_temp = list()
+    min_temp = list()
+    wind_chill = list()

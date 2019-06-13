@@ -49,6 +49,8 @@ def update_row(weather_type, selector):
     }
 
     weather_vals = fields_to_update.get(weather_type)
+    if len(weather_vals) < 21:
+        weather_vals.append(0)
     
     row = sheet.range(selector)
 
