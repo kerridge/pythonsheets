@@ -5,7 +5,7 @@ certifi==2019.3.9
 chardet==3.0.4
 get==2019.4.13
 gspread==3.1.0
-httplib2==0.12.3
+httplib2==0.18.0
 idna==2.8
 isort==4.3.20
 lazy-object-proxy==1.4.1
